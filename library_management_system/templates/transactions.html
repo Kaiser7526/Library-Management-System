@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <h2 class="my-4">Transactions</h2>
+
+    <!-- Checkout Form -->
+    <div class="card mb-4">
+        <div class="card-header">
+            Checkout Book
+        </div>
+        <div class="card-body">
+            <form action="{{ url_for('checkout') }}" method="post">
+                <div class="mb-3">
+                    <label for="book_id" class="form-label">Book</label>
+                    <select class="form-control" id="book_id" name="book_id" required>
+                        {% for book in books %}
+                        <option value="{{ book.id }}">{{ book.title }} ({{ book.author }})</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label for="member_id" class="form-label">Member</label>
+                    <select class="form-control" id="member_id" name="member_id" required>
+                        {% for member in members %}
+                        <option value="{{ member.id }}">{{ member.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary"><i class="fas fa-check"></i> Checkout</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Active Transactions -->
+    <div class="card">
+        <div class="card-header">
+            Active Transactions
+        </div>
+        <div class="card-body">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Book</th>
+                        <th>Member</th>
+                        <th>Issue Date</th>
+                        <th>Due Date</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for transaction in transactions %}
+                    <tr>
+                        <td>{{ transaction.book.title }}</td>
+                        <td>{{ transaction.member.name }}</td>
+                        <td>{{ transaction.issue_date.strftime('%Y-%m-%d') }}</td>
+                        <td>{{ transaction.due_date.strftime('%Y-%m-%d') }}</td>
+                        <td>
+                            <a href="{{ url_for('return_book', transaction_id=transaction.id) }}" class="btn btn-sm btn-warning">
+                                <i class="fas fa-undo"></i> Return
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}
